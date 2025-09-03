@@ -325,7 +325,7 @@ const OnboardingFeeModal: React.FC<{ onClose: () => void, onFinish: () => void }
           <svg className="w-10 h-10 text-blue-600 mr-2 animate-bounce" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 9c-3.866 0-7-3.134-7-7 0-3.866 3.134-7 7-7s7 3.134 7 7c0 3.866-3.134 7-7 7z" /></svg>
           <span className="text-2xl font-extrabold text-blue-700">Onboarding Application Fee</span>
         </div>
-        <div className="text-lg text-gray-700 mb-4 text-center">A <span className="font-bold text-green-600">refundable onboarding application fee</span> of <span className="font-bold text-blue-700">250 Ksh</span> will be paid.</div>
+        <div className="text-lg text-gray-700 mb-4 text-center">A <span className="font-bold text-green-600">refundable onboarding application fee</span> of <span className="font-bold text-blue-700">160 Ksh</span> will be paid.</div>
         <div className="flex items-center justify-center mb-2">
           <span className="text-base font-semibold text-gray-700 mr-2">Refund Code:</span>
           <span className="text-xl font-mono bg-blue-100 px-3 py-1 rounded-lg text-blue-700 border border-blue-300 select-all shadow-sm">{refundCode}</span>
