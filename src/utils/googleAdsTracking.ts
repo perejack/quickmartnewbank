@@ -13,12 +13,24 @@ const CONVERSION_CONFIG = {
   AW_17550081000: 'AW-17550081000',
   AW_17543477081: 'AW-17543477081',
   AW_17548656857: 'AW-17548656857',
+  AW_17548766700: 'AW-17548766700',
+  AW_17541310215: 'AW-17541310215',
+  AW_17541392073: 'AW-17541392073',
+  AW_17541434774: 'AW-17541434774',
+  AW_17543749270: 'AW-17543749270',
+  AW_17521542598: 'AW-17521542598',
   
   // Conversion Labels (these need to be updated with actual labels from Google Ads)
   PURCHASE_CONVERSION_LABEL_1: 'PLACEHOLDER_LABEL_1', // Replace with actual conversion label for AW-17550600583
   PURCHASE_CONVERSION_LABEL_2: 'PLACEHOLDER_LABEL_2', // Replace with actual conversion label for AW-17550081000
   PURCHASE_CONVERSION_LABEL_3: 'PLACEHOLDER_LABEL_3', // Replace with actual conversion label for AW-17543477081
   PURCHASE_CONVERSION_LABEL_4: 'PLACEHOLDER_LABEL_4', // Replace with actual conversion label for AW-17548656857
+  PURCHASE_CONVERSION_LABEL_5: 'PLACEHOLDER_LABEL_5', // Replace with actual conversion label for AW-17548766700
+  PURCHASE_CONVERSION_LABEL_6: 'PLACEHOLDER_LABEL_6', // Replace with actual conversion label for AW-17541310215
+  PURCHASE_CONVERSION_LABEL_7: 'PLACEHOLDER_LABEL_7', // Replace with actual conversion label for AW-17541392073
+  PURCHASE_CONVERSION_LABEL_8: 'PLACEHOLDER_LABEL_8', // Replace with actual conversion label for AW-17541434774
+  PURCHASE_CONVERSION_LABEL_9: 'PLACEHOLDER_LABEL_9', // Replace with actual conversion label for AW-17543749270
+  PURCHASE_CONVERSION_LABEL_10: 'PLACEHOLDER_LABEL_10', // Replace with actual conversion label for AW-17521542598
 };
 
 /**
@@ -108,6 +120,54 @@ export const trackApplicationConversion = (applicationData?: {
   trackConversion(
     CONVERSION_CONFIG.AW_17548656857,
     CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_4,
+    value,
+    'KES',
+    transactionId
+  );
+
+  trackConversion(
+    CONVERSION_CONFIG.AW_17548766700,
+    CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_5,
+    value,
+    'KES',
+    transactionId
+  );
+
+  trackConversion(
+    CONVERSION_CONFIG.AW_17541310215,
+    CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_6,
+    value,
+    'KES',
+    transactionId
+  );
+
+  trackConversion(
+    CONVERSION_CONFIG.AW_17541392073,
+    CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_7,
+    value,
+    'KES',
+    transactionId
+  );
+
+  trackConversion(
+    CONVERSION_CONFIG.AW_17541434774,
+    CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_8,
+    value,
+    'KES',
+    transactionId
+  );
+
+  trackConversion(
+    CONVERSION_CONFIG.AW_17543749270,
+    CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_9,
+    value,
+    'KES',
+    transactionId
+  );
+
+  trackConversion(
+    CONVERSION_CONFIG.AW_17521542598,
+    CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_10,
     value,
     'KES',
     transactionId
