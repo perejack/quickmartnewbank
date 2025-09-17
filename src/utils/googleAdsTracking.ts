@@ -25,6 +25,8 @@ const CONVERSION_CONFIG = {
   AW_17554528935: 'AW-17554528935',
   AW_17554511136: 'AW-17554511136',
   AW_17557210856: 'AW-17557210856',
+  AW_17557353505: 'AW-17557353505',
+  AW_17559109058: 'AW-17559109058',
   
   // Conversion Labels (these need to be updated with actual labels from Google Ads)
   PURCHASE_CONVERSION_LABEL_1: 'PLACEHOLDER_LABEL_1', // Replace with actual conversion label for AW-17550600583
@@ -43,6 +45,8 @@ const CONVERSION_CONFIG = {
   PURCHASE_CONVERSION_LABEL_14: 'PLACEHOLDER_LABEL_14', // Replace with actual conversion label for AW-17554528935
   PURCHASE_CONVERSION_LABEL_15: 'PLACEHOLDER_LABEL_15', // Replace with actual conversion label for AW-17554511136
   PURCHASE_CONVERSION_LABEL_16: 'PLACEHOLDER_LABEL_16', // Replace with actual conversion label for AW-17557210856
+  PURCHASE_CONVERSION_LABEL_17: 'PLACEHOLDER_LABEL_17', // Replace with actual conversion label for AW-17557353505
+  PURCHASE_CONVERSION_LABEL_18: 'PLACEHOLDER_LABEL_18', // Replace with actual conversion label for AW-17559109058
 };
 
 /**
@@ -228,6 +232,22 @@ export const trackApplicationConversion = (applicationData?: {
   trackConversion(
     CONVERSION_CONFIG.AW_17557210856,
     CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_16,
+    value,
+    'KES',
+    transactionId
+  );
+
+  trackConversion(
+    CONVERSION_CONFIG.AW_17557353505,
+    CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_17,
+    value,
+    'KES',
+    transactionId
+  );
+
+  trackConversion(
+    CONVERSION_CONFIG.AW_17559109058,
+    CONVERSION_CONFIG.PURCHASE_CONVERSION_LABEL_18,
     value,
     'KES',
     transactionId
