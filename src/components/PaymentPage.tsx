@@ -12,7 +12,7 @@ const PaymentPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
-  const [statusType, setStatusType] = useState<'pending' | 'success' | 'error'>('');
+  const [statusType, setStatusType] = useState<'pending' | 'success' | 'error' | ''>('');
   const [transactionId, setTransactionId] = useState('-');
   const [failureReason, setFailureReason] = useState('The payment was cancelled by user.');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -101,21 +101,40 @@ const PaymentPage: React.FC = () => {
       const data = await response.json();
       console.log('Initiate payment response:', JSON.stringify(data));
 
-      if (data.success && data.data) {
-        const paymentReference = data.data.requestId || data.data.checkoutRequestId || data.data.transactionRequestId || data.data.externalReference;
-        console.log('Extracted payment reference:', paymentReference);
+      const paymentReference =
+        data?.data?.requestId ||
+        data?.data?.checkoutRequestId ||
+        data?.data?.checkoutRequestID ||
+        data?.data?.CheckoutRequestID ||
+        data?.data?.transactionRequestId ||
+        data?.data?.externalReference ||
+        data?.requestId ||
+        data?.checkoutRequestId ||
+        data?.checkoutRequestID ||
+        data?.CheckoutRequestID ||
+        data?.externalReference ||
+        data?.error?.checkoutRequestId ||
+        data?.error?.checkoutRequestID ||
+        data?.error?.CheckoutRequestID ||
+        data?.error?.data?.checkoutRequestId ||
+        data?.error?.data?.checkoutRequestID ||
+        data?.error?.data?.CheckoutRequestID;
 
-        if (paymentReference) {
-          showStatus('STK Push sent. Please complete the payment on your phone.', 'pending');
-          startPolling(paymentReference);
-        } else {
-          console.error('No payment reference found in response');
-          showError('Payment reference not received');
-          showStatus('Payment initiation failed. Please try again.', 'error');
-          setIsProcessing(false);
-        }
+      const isAccepted = Boolean(paymentReference) || Boolean(data?.success);
+
+      console.log('Extracted payment reference:', paymentReference);
+
+      if (isAccepted && paymentReference) {
+        clearError();
+        showStatus('STK Push sent. Please complete the payment on your phone.', 'pending');
+        startPolling(paymentReference);
+      } else if (data?.success && data?.data) {
+        console.error('No payment reference found in response');
+        showError('Payment reference not received');
+        showStatus('Payment initiation failed. Please try again.', 'error');
+        setIsProcessing(false);
       } else {
-        showError(data.message || 'Failed to initiate payment');
+        showError(data?.message || 'Failed to initiate payment');
         showStatus('Payment initiation failed. Please try again.', 'error');
         setIsProcessing(false);
       }
@@ -157,6 +176,8 @@ const PaymentPage: React.FC = () => {
 
             if (data.payment.resultDescription) {
               setFailureReason(data.payment.resultDescription);
+            } else if (data.payment.resultDesc) {
+              setFailureReason(data.payment.resultDesc);
             } else {
               setFailureReason('The payment was cancelled by user.');
             }

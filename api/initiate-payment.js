@@ -69,11 +69,37 @@ export default async (req, res) => {
 
     const responseData = await response.json();
 
-    if (response.ok && responseData.status === 'success') {
+    const checkoutRequestId =
+      responseData?.checkoutRequestId ||
+      responseData?.checkoutRequestID ||
+      responseData?.CheckoutRequestID ||
+      responseData?.data?.checkoutRequestId ||
+      responseData?.data?.checkoutRequestID ||
+      responseData?.data?.CheckoutRequestID;
+
+    const responseCode =
+      responseData?.ResponseCode ??
+      responseData?.responseCode ??
+      responseData?.data?.ResponseCode ??
+      responseData?.data?.responseCode;
+
+    const statusValue = typeof responseData?.status === 'string' ? responseData.status.toLowerCase() : responseData?.status;
+
+    const isAccepted =
+      (response.ok &&
+        (statusValue === 'success' ||
+          responseData?.success === true ||
+          responseCode === '0' ||
+          responseCode === 0 ||
+          Boolean(checkoutRequestId))) ||
+      Boolean(checkoutRequestId);
+
+    if (isAccepted) {
+      const resolvedCheckoutId = checkoutRequestId || externalReference;
       const { error: dbError } = await supabase
         .from('transactions')
         .insert({
-          transaction_request_id: responseData.checkoutRequestId || externalReference,
+          transaction_request_id: resolvedCheckoutId,
           status: 'pending',
           amount: amount,
           phone: normalizedPhone,
@@ -90,15 +116,15 @@ export default async (req, res) => {
         success: true,
         message: 'Payment initiated successfully',
         data: {
-          externalReference: responseData.checkoutRequestId || externalReference,
-          checkoutRequestId: responseData.checkoutRequestId || externalReference
+          externalReference: externalReference,
+          checkoutRequestId: resolvedCheckoutId
         }
       });
     } else {
       console.error('SwiftPay error:', responseData);
       return res.status(response.status || 400).json({
         success: false,
-        message: responseData.message || 'Payment initiation failed',
+        message: responseData.message || responseData.CustomerMessage || responseData.errorMessage || 'Payment initiation failed',
         error: responseData
       });
     }
