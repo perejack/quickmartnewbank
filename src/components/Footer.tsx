@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { ShoppingCart, Mail, MapPin, Clock } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -34,12 +34,14 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#jobs" className="text-gray-400 hover:text-white transition-colors duration-200">Available Jobs</a></li>
-              <li><a href="#benefits" className="text-gray-400 hover:text-white transition-colors duration-200">Benefits</a></li>
-              <li><a href="#process" className="text-gray-400 hover:text-white transition-colors duration-200">Application Process</a></li>
-              <li><a href="#testimonials" className="text-gray-400 hover:text-white transition-colors duration-200">Testimonials</a></li>
+              <li><Link to="/#jobs" className="text-gray-400 hover:text-white transition-colors duration-200">Available Jobs</Link></li>
+              <li><Link to="/#benefits" className="text-gray-400 hover:text-white transition-colors duration-200">Benefits</Link></li>
+              <li><Link to="/#process" className="text-gray-400 hover:text-white transition-colors duration-200">Application Process</Link></li>
+              <li><Link to="/#testimonials" className="text-gray-400 hover:text-white transition-colors duration-200">Testimonials</Link></li>
+              <li><Link to="/contact" className="text-gray-400 hover:text-white transition-colors duration-200">Contact</Link></li>
               <li><Link to="/privacy-policy" className="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</Link></li>
               <li><Link to="/terms-of-service" className="text-gray-400 hover:text-white transition-colors duration-200">Terms of Service</Link></li>
+              <li><Link to="/cookies" className="text-gray-400 hover:text-white transition-colors duration-200">Cookies Policy</Link></li>
             </ul>
           </div>
 
