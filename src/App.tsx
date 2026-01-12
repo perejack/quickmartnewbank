@@ -13,6 +13,7 @@ import TermsOfService from './components/TermsOfService';
 import SeoManager from './components/SeoManager';
 import ContactPage from './components/ContactPage';
 import CookiesPolicy from './components/CookiesPolicy';
+import WhatsAppButton from './components/WhatsAppButton';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />
+      <WhatsAppButton />
     </Router>
   );
 }

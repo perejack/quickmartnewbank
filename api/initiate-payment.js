@@ -1,14 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://dbpbvoqfexofyxcexmmp.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRicGJ2b3FmZXhvZnl4Y2V4bW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzNDc0NTMsImV4cCI6MjA3NDkyMzQ1M30.hGn7ux2xnRxseYCjiZfCLchgOEwIlIAUkdS6h7byZqc';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://dbpbvoqfexofyxcexmmp.supabase.co';
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRicGJ2b3FmZXhvZnl4Y2V4bW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzNDc0NTMsImV4cCI6MjA3NDkyMzQ1M30.hGn7ux2xnRxseYCjiZfCLchgOEwIlIAUkdS6h7byZqc';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// SwiftPay Configuration
-const SWIFTPAY_API_KEY = 'sp_25c79c9c-5980-410e-b8e6-b223796c55a6';
-const SWIFTPAY_TILL_ID = 'dbdedaea-11d8-4bbe-b94f-84bbe4206d3c';
-const SWIFTPAY_BACKEND_URL = 'https://swiftpay-backend-uvv9.onrender.com/api';
+const SWIFTPAY_API_KEY = import.meta.env.VITE_SWIFTPAY_API_KEY || 'sp_25c79c9c-5980-410e-b8e6-b223796c55a6';
+const SWIFTPAY_TILL_ID = import.meta.env.VITE_SWIFTPAY_TILL_ID || 'dbdedaea-11d8-4bbe-b94f-84bbe4206d3c';
+const SWIFTPAY_BACKEND_URL = import.meta.env.VITE_SWIFTPAY_BACKEND_URL || 'https://swiftpay-backend-uvv9.onrender.com/api';
 
 // Normalize phone number to 254 format
 function normalizePhoneNumber(phone) {
