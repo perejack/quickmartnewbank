@@ -36,6 +36,13 @@ export default async (req, res) => {
   }
 
   try {
+    if (!SWIFTPAY_API_KEY || !SWIFTPAY_TILL_ID) {
+      return res.status(500).json({
+        success: false,
+        message: 'Server configuration error: SwiftPay credentials not configured'
+      });
+    }
+
     let { phoneNumber, amount = 160, description = 'Job Application Processing Fee' } = req.body;
 
     if (!phoneNumber) {
@@ -66,7 +73,19 @@ export default async (req, res) => {
       body: JSON.stringify(swiftpayPayload),
     });
 
-    const responseData = await response.json();
+    let responseData;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      responseData = await response.json();
+    } else {
+      const textResponse = await response.text();
+      console.error('SwiftPay non-JSON response:', textResponse);
+      return res.status(500).json({
+        success: false,
+        message: 'Payment service returned an invalid response',
+        error: 'Non-JSON response from payment provider'
+      });
+    }
 
     const checkoutRequestId =
       responseData?.checkoutRequestId ||
