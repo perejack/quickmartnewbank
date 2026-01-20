@@ -24,18 +24,18 @@ const Header: React.FC = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <Link to="/#jobs" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
-              Available Jobs
+          <nav className="hidden md:flex space-x-6">
+            <Link to="/" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
+              Home
             </Link>
-            <Link to="/#benefits" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
-              Benefits
+            <Link to="/blog" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
+              Career Blog
             </Link>
-            <Link to="/#process" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
-              Application Process
+            <Link to="/salary" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
+              Salary & Benefits
             </Link>
-            <Link to="/#testimonials" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
-              Success Stories
+            <Link to="/locations" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
+              Locations
             </Link>
           </nav>
 
@@ -66,17 +66,17 @@ const Header: React.FC = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t shadow-lg">
-              <Link to="/#jobs" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
-                Available Jobs
+              <Link to="/" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
+                Home
               </Link>
-              <Link to="/#benefits" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
-                Benefits
+              <Link to="/blog" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
+                Career Blog
               </Link>
-              <Link to="/#process" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
-                Application Process
+              <Link to="/salary" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
+                Salary & Benefits
               </Link>
-              <Link to="/#testimonials" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
-                Success Stories
+              <Link to="/locations" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
+                Locations
               </Link>
               <div className="px-3 py-2">
                 <div className="flex items-center text-gray-600 text-sm mb-3">

@@ -15,6 +15,10 @@ import ContactPage from './components/ContactPage';
 import CookiesPolicy from './components/CookiesPolicy';
 import WhatsAppButton from './components/WhatsAppButton';
 import JobDetailPage from './components/JobDetailPage';
+import BlogListPage from './components/BlogListPage';
+import BlogDetailPage from './components/BlogDetailPage';
+import SalaryPage from './components/SalaryPage';
+import LocationsPage from './components/LocationsPage';
 
 function App() {
   return (
@@ -33,6 +37,10 @@ function App() {
         } />
         <Route path="/apply" element={<ApplicationPage />} />
         <Route path="/jobs/:jobId" element={<JobDetailPage />} />
+        <Route path="/blog" element={<BlogListPage />} />
+        <Route path="/blog/:postId" element={<BlogDetailPage />} />
+        <Route path="/salary" element={<SalaryPage />} />
+        <Route path="/locations" element={<LocationsPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
