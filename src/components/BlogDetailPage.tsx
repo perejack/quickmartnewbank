@@ -102,7 +102,7 @@ const BlogDetailPage: React.FC = () => {
         </header>
 
         <div className="mb-12 rounded-3xl overflow-hidden shadow-2xl">
-          <img src={post.image} alt={post.title} className="w-full h-auto" />
+          <img src={post.image} alt={`${post.title} - Quickmart Careers Blog`} className="w-full h-auto" loading="lazy" />
         </div>
 
         <div 

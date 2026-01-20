@@ -124,8 +124,9 @@ const JobDetailPage: React.FC = () => {
           <div className="relative h-64 sm:h-80">
             <img 
               src={job.image} 
-              alt={job.title} 
+              alt={`${job.title} Job Opportunity at Quickmart Kenya`} 
               className="w-full h-full object-cover"
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
             <div className="absolute bottom-8 left-8 right-8">

@@ -7,6 +7,7 @@ import ApplicationProcess from './components/ApplicationProcess';
 import Testimonials from './components/Testimonials';
 import PartnersResources from './components/PartnersResources';
 import InternalLinkBooster from './components/InternalLinkBooster';
+import RecruitmentFAQ from './components/RecruitmentFAQ';
 import Footer from './components/Footer';
 import ApplicationPage from './components/ApplicationPage';
 import PaymentPage from './components/PaymentPage';
@@ -37,6 +38,7 @@ function App() {
             <Testimonials />
             <PartnersResources />
             <InternalLinkBooster />
+            <RecruitmentFAQ />
           </>
         } />
         <Route path="/apply" element={<ApplicationPage />} />
