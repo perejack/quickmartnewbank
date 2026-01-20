@@ -34,16 +34,16 @@ const JobDetailPage: React.FC = () => {
         "hiringOrganization": {
           "@type": "Organization",
           "name": "Quickmart Supermarket",
-          "sameAs": "https://quickmartjobs.site",
-          "logo": "https://quickmartjobs.site/logo.svg"
+          "sameAs": "https://www.quickmartjobs.site",
+          "logo": "https://www.quickmartjobs.site/logo.svg"
         },
         "jobLocation": {
           "@type": "Place",
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "Various Locations",
+            "streetAddress": "Various Stores Nationwide",
             "addressLocality": "Nairobi",
-            "addressRegion": "Nairobi",
+            "addressRegion": "Nairobi County",
             "postalCode": "00100",
             "addressCountry": "KE"
           }
@@ -53,7 +53,7 @@ const JobDetailPage: React.FC = () => {
           "currency": "KES",
           "value": {
             "@type": "QuantitativeValue",
-            "value": job.salary.replace(/[^0-9]/g, ''),
+            "value": job.salary.replace(/[^0-9]/g, '').split('-')[0] || "25000",
             "unitText": "MONTH"
           }
         }
@@ -73,12 +73,12 @@ const JobDetailPage: React.FC = () => {
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://quickmartjobs.site"
+          "item": "https://www.quickmartjobs.site"
         }, {
           "@type": "ListItem",
           "position": 2,
           "name": job.title,
-          "item": `https://quickmartjobs.site/jobs/${job.id}`
+          "item": `https://www.quickmartjobs.site/jobs/${job.id}`
         }]
       };
       const breadcrumbScript = document.createElement('script');
