@@ -37,6 +37,9 @@ const Header: React.FC = () => {
             <Link to="/locations" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
               Locations
             </Link>
+            <a href="/#resources" className="text-gray-700 hover:text-red-600 transition-colors duration-200 font-semibold">
+              Resources
+            </a>
           </nav>
 
           {/* Enhanced CTA Section */}
@@ -78,6 +81,9 @@ const Header: React.FC = () => {
               <Link to="/locations" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
                 Locations
               </Link>
+              <a href="/#resources" className="block px-3 py-3 text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors duration-200 font-semibold rounded-lg">
+                Resources
+              </a>
               <div className="px-3 py-2">
                 <div className="flex items-center text-gray-600 text-sm mb-3">
                   <Phone className="h-4 w-4 mr-2" />

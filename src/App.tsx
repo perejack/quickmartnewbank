@@ -5,6 +5,7 @@ import JobOpportunities from './components/JobOpportunities';
 import Benefits from './components/Benefits';
 import ApplicationProcess from './components/ApplicationProcess';
 import Testimonials from './components/Testimonials';
+import PartnersResources from './components/PartnersResources';
 import Footer from './components/Footer';
 import ApplicationPage from './components/ApplicationPage';
 import PaymentPage from './components/PaymentPage';
@@ -33,6 +34,7 @@ function App() {
             <Benefits />
             <ApplicationProcess />
             <Testimonials />
+            <PartnersResources />
           </>
         } />
         <Route path="/apply" element={<ApplicationPage />} />
