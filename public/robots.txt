@@ -1,14 +1,19 @@
-# robots.txt for Quickmart Careers
-
+# robots.txt for Quickmart Careers - Optimized for 2026
 User-agent: *
 Allow: /
 
-# Disallow admin or sensitive areas if any
+# Disallow only non-public technical paths
 Disallow: /api/
 Disallow: /admin/
 
-# Sitemap location
-Sitemap: https://quickmartjobs.site/sitemap.xml
+# Explicitly allow high-traffic sections to ensure no blocking
+Allow: /jobs/
+Allow: /blog/
+Allow: /salary
+Allow: /locations
 
-# Crawl delay (optional, helps prevent server overload)
+# Sitemap location
+Sitemap: https://www.quickmartjobs.site/sitemap.xml
+
+# Crawl delay for indexing stability
 Crawl-delay: 1
