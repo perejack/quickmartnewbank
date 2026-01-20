@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Users, DollarSign, Truck, Package, ShoppingBag, Calculator, TrendingUp, Clock, Briefcase, UserCheck, ChefHat, Warehouse, Shield } from 'lucide-react';
-
-import image4 from '../assets/downloaded/image_4.jpg';
-import image5 from '../assets/downloaded/image_5.jpeg';
-import image6 from '../assets/downloaded/image_6.jpg';
-import image7 from '../assets/downloaded/image_7.jpg';
-import image8 from '../assets/downloaded/image_8.jpg';
-import image9 from '../assets/downloaded/image_9.jpg';
-import image11 from '../assets/downloaded/image_11.jpg';
+import { useNavigate, Link } from 'react-router-dom';
+import { Users, DollarSign, Truck, Package, ShoppingBag, Calculator, TrendingUp, Clock, Briefcase, UserCheck, ChefHat, Warehouse, Shield, ArrowRight } from 'lucide-react';
+import { jobs } from '../data/jobsData';
 
 interface JobCardProps {
+  id: string;
   title: string;
   positions: number;
   salary: string;
@@ -20,7 +14,7 @@ interface JobCardProps {
   image: string;
 }
 
-const JobCard: React.FC<JobCardProps> = ({ title, positions, salary, icon, description, isPopular, image }) => {
+const JobCard: React.FC<JobCardProps> = ({ id, title, positions, salary, icon, description, isPopular, image }) => {
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
@@ -95,18 +89,28 @@ const JobCard: React.FC<JobCardProps> = ({ title, positions, salary, icon, descr
           </div>
         </div>
 
-        {/* Apply Button */}
-        <button
-          className="w-full bg-gradient-to-r from-white to-gray-100 text-red-600 border-2 border-red-600 py-3 rounded-xl font-bold hover:bg-red-600 hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg group mb-3"
-          onClick={() => navigate('/apply')}
-          aria-label={`Apply for ${title}`}
-        >
-          Apply Now
-          <TrendingUp className="inline ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
-        </button>
+        {/* Action Buttons */}
+        <div className="space-y-3">
+          <button
+            className="w-full bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg group"
+            onClick={() => navigate(`/jobs/${id}`)}
+            aria-label={`View details for ${title}`}
+          >
+            View Details & Requirements
+            <ArrowRight className="inline ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+          </button>
+          
+          <button
+            className="w-full bg-white text-red-600 border-2 border-red-600 py-3 rounded-xl font-bold hover:bg-red-50 transition-all duration-300"
+            onClick={() => navigate('/apply')}
+            aria-label={`Apply for ${title}`}
+          >
+            Quick Apply
+          </button>
+        </div>
 
         {/* Urgency Indicator */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-4">
           <div className="flex items-center space-x-2">
             <div className="relative">
               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
@@ -125,98 +129,21 @@ const JobCard: React.FC<JobCardProps> = ({ title, positions, salary, icon, descr
 };
 
 const JobOpportunities: React.FC = () => {
-  const jobs = [
-    {
-      title: "Cleaners",
-      positions: 43,
-      salary: "Ksh 18,000/month",
-      icon: <Users className="h-6 w-6" />,
-      description: "Maintain store cleanliness and hygiene standards",
-      isPopular: false,
-      image: image5
-    },
-    {
-      title: "Cashiers",
-      positions: 22,
-      salary: "Ksh 21,000/month",
-      icon: <Calculator className="h-6 w-6" />,
-      description: "Handle customer transactions and provide excellent service",
-      isPopular: true,
-      image: image6
-    },
-    {
-      title: "Store Keepers",
-      positions: 68,
-      salary: "Ksh 34,000/month",
-      icon: <Package className="h-6 w-6" />,
-      description: "Manage inventory and stock organization",
-      isPopular: false,
-      image: image7
-    },
-    {
-      title: "Drivers",
-      positions: 20,
-      salary: "Ksh 25,000/month",
-      icon: <Truck className="h-6 w-6" />,
-      description: "Deliver products and maintain delivery schedules",
-      isPopular: false,
-      image: image8
-    },
-    {
-      title: "Loaders & Off-loaders",
-      positions: 82,
-      salary: "Ksh 18,000/month",
-      icon: <ShoppingBag className="h-6 w-6" />,
-      description: "Handle product loading and unloading operations",
-      isPopular: false,
-      image: image9
-    },
-    {
-      title: "Marketer",
-      positions: 50,
-      salary: "Ksh 29,000/month",
-      icon: <Briefcase className="h-6 w-6" />,
-      description: "Develop and implement marketing strategies",
-      isPopular: false,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0Rj5qzstgL0vz7xleyMmadkRWvqcAzM0HLg&s"
-    },
-    {
-      title: "Sales Attendant",
-      positions: 120,
-      salary: "Ksh 25,000/month",
-      icon: <UserCheck className="h-6 w-6" />,
-      description: "Assist customers and drive sales",
-      isPopular: true,
-      image: image4
-    },
-    {
-      title: "Chef",
-      positions: 35,
-      salary: "Ksh 23,750/month",
-      icon: <ChefHat className="h-6 w-6" />,
-      description: "Prepare high-quality meals for our deli",
-      isPopular: false,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIbQRkmcCsgBXtgg0GFTeIknEmV9VHri3zSQ&s"
-    },
-    {
-      title: "Warehouse Supervisor",
-      positions: 15,
-      salary: "Ksh 31,000/month",
-      icon: <Warehouse className="h-6 w-6" />,
-      description: "Oversee and coordinate warehouse activities",
-      isPopular: false,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrlZShjXutRnoulWcVg48CxBYN-ZXqjZ4D8A&s"
-    },
-    {
-      title: "Guards",
-      positions: 75,
-      salary: "Ksh 27,000/month",
-      icon: <Shield className="h-6 w-6" />,
-      description: "Ensure the safety and security of the premises",
-      isPopular: false,
-      image: image11
+  const getIcon = (title: string) => {
+    switch (title) {
+      case "Cleaners": return <Users className="h-6 w-6" />;
+      case "Cashiers": return <Calculator className="h-6 w-6" />;
+      case "Store Keepers": return <Package className="h-6 w-6" />;
+      case "Drivers": return <Truck className="h-6 w-6" />;
+      case "Loaders & Off-loaders": return <ShoppingBag className="h-6 w-6" />;
+      case "Marketer": return <Briefcase className="h-6 w-6" />;
+      case "Sales Attendant": return <UserCheck className="h-6 w-6" />;
+      case "Chef": return <ChefHat className="h-6 w-6" />;
+      case "Warehouse Supervisor": return <Warehouse className="h-6 w-6" />;
+      case "Guards": return <Shield className="h-6 w-6" />;
+      default: return <Briefcase className="h-6 w-6" />;
     }
-  ];
+  };
 
   return (
     <section id="jobs" className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-green-600 to-green-400 w-full overflow-x-hidden">
@@ -236,13 +163,14 @@ const JobOpportunities: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-12 sm:mb-16 md:mb-20 w-full">
-          {jobs.map((job, index) => (
+          {jobs.map((job) => (
             <JobCard
-              key={index}
+              key={job.id}
+              id={job.id}
               title={job.title}
               positions={job.positions}
               salary={job.salary}
-              icon={job.icon}
+              icon={getIcon(job.title)}
               description={job.description}
               isPopular={job.isPopular}
               image={job.image}
@@ -250,12 +178,8 @@ const JobOpportunities: React.FC = () => {
           ))}
         </div>
 
-        {/* Enhanced Total Summary with Quickmart Store Image */}
+        {/* Enhanced Total Summary */}
         <div className="relative bg-gradient-to-r from-red-600 to-red-700 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden w-full">
-          <div 
-            className="absolute inset-0 bg-cover bg-center opacity-20"
-            style={{ backgroundImage: `url(${image4})` }}
-          ></div>
           <div className="absolute inset-0 bg-gradient-to-r from-red-600/95 to-red-700/95"></div>
           
           <div className="relative z-10 p-6 sm:p-8 md:p-12 text-white w-full">

@@ -14,6 +14,7 @@ import SeoManager from './components/SeoManager';
 import ContactPage from './components/ContactPage';
 import CookiesPolicy from './components/CookiesPolicy';
 import WhatsAppButton from './components/WhatsAppButton';
+import JobDetailPage from './components/JobDetailPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           </>
         } />
         <Route path="/apply" element={<ApplicationPage />} />
+        <Route path="/jobs/:jobId" element={<JobDetailPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
