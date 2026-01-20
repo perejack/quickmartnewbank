@@ -34,10 +34,10 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link to="/#jobs" className="text-gray-400 hover:text-white transition-colors duration-200">Available Jobs</Link></li>
-              <li><Link to="/#benefits" className="text-gray-400 hover:text-white transition-colors duration-200">Benefits</Link></li>
-              <li><Link to="/#process" className="text-gray-400 hover:text-white transition-colors duration-200">Application Process</Link></li>
-              <li><Link to="/#testimonials" className="text-gray-400 hover:text-white transition-colors duration-200">Testimonials</Link></li>
+              <li><Link to="/" className="text-gray-400 hover:text-white transition-colors duration-200">Home</Link></li>
+              <li><Link to="/blog" className="text-gray-400 hover:text-white transition-colors duration-200">Career Blog</Link></li>
+              <li><Link to="/salary" className="text-gray-400 hover:text-white transition-colors duration-200">Salary & Benefits</Link></li>
+              <li><Link to="/locations" className="text-gray-400 hover:text-white transition-colors duration-200">Store Locations</Link></li>
               <li><Link to="/contact" className="text-gray-400 hover:text-white transition-colors duration-200">Contact</Link></li>
               <li><Link to="/privacy-policy" className="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</Link></li>
               <li><Link to="/terms-of-service" className="text-gray-400 hover:text-white transition-colors duration-200">Terms of Service</Link></li>
@@ -98,8 +98,8 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
           <p className="text-gray-400">
-            © 2024 Quickmart. All rights reserved. | 
-            <span className="text-red-600 font-semibold"> Join Our Team Today!</span>
+            © 2026 Quickmart Careers. All rights reserved. | 
+            <span className="text-red-600 font-semibold"> Official Recruitment Portal</span>
           </p>
         </div>
       </div>
