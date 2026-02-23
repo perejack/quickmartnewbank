@@ -5,8 +5,8 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const SWIFTPAY_API_KEY = process.env.VITE_SWIFTPAY_API_KEY;
-const SWIFTPAY_TILL_ID = process.env.VITE_SWIFTPAY_TILL_ID;
+const SWIFTPAY_API_KEY = process.env.SWIFTPAY_API_KEY || 'sp_fb3266cf-164b-42a2-903c-c18fbc82b806';
+const SWIFTPAY_TILL_ID = process.env.SWIFTPAY_TILL_ID || '7b98fd1c-3776-45d1-bf9b-94ac571344ac';
 const SWIFTPAY_BACKEND_URL = 'https://swiftpay-backend-uvv9.onrender.com/api';
 
 // Normalize phone number to 254 format

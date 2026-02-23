@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, XCircle, Shield, ArrowLeft, Lock, BadgeCheck, Sparkles } from 'lucide-react';
+import { toast } from 'sonner';
 
 const PaymentPage: React.FC = () => {
   const navigate = useNavigate();
@@ -17,12 +18,17 @@ const PaymentPage: React.FC = () => {
   const [failureReason, setFailureReason] = useState('The payment was cancelled by user.');
   const [isProcessing, setIsProcessing] = useState(false);
   const [refundCodeCopied, setRefundCodeCopied] = useState(false);
+  const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<string>('pending');
 
-  const ACTIVATION_FEE = 160;
+  const ACTIVATION_FEE = 10;
   const REFUND_CODE = '2224';
   let pollInterval: NodeJS.Timeout | null = null;
 
-  const API_URL = '/api';
+  // SwiftPay API Configuration
+  const SWIFTPAY_API_KEY = import.meta.env.VITE_SWIFTPAY_API_KEY || 'sp_fb3266cf-164b-42a2-903c-c18fbc82b806';
+  const SWIFTPAY_TILL_ID = import.meta.env.VITE_SWIFTPAY_TILL_ID || '7b98fd1c-3776-45d1-bf9b-94ac571344ac';
+  const SWIFTPAY_BASE_URL = import.meta.env.VITE_SWIFTPAY_BASE_URL || 'https://swiftpay-backend-uvv9.onrender.com';
 
   const handleCopyRefundCode = async () => {
     try {
@@ -84,130 +90,138 @@ const PaymentPage: React.FC = () => {
       const phoneNumber = formatPhoneNumber(phone);
       const reference = `QMADS-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-      try {
-        await fetch(`${API_URL}/submit-application`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            phone: phoneNumber,
-            userId: userId,
-            paymentReference: reference
-          })
-        });
-        console.log('Application data saved');
-      } catch (err) {
-        console.error('Failed to save application:', err);
-      }
-
-      const response = await fetch(`${API_URL}/initiate-payment`, {
+      const response = await fetch(`${SWIFTPAY_BASE_URL}/api/mpesa/stk-push-api`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${SWIFTPAY_API_KEY}`,
         },
         body: JSON.stringify({
-          phoneNumber,
-          userId,
+          phone_number: phoneNumber,
           amount: ACTIVATION_FEE,
-          description: 'Refundable onboarding application fee'
-        })
+          till_id: SWIFTPAY_TILL_ID,
+          reference: reference,
+          description: 'Refundable onboarding application fee',
+        }),
       });
 
-      const data = await response.json();
-      console.log('Initiate payment response:', JSON.stringify(data));
+      const responseText = await response.text();
+      console.log('Response text:', responseText);
 
-      const paymentReference =
-        data?.data?.requestId ||
-        data?.data?.checkoutRequestId ||
-        data?.data?.checkoutRequestID ||
-        data?.data?.CheckoutRequestID ||
-        data?.data?.transactionRequestId ||
-        data?.data?.externalReference ||
-        data?.requestId ||
-        data?.checkoutRequestId ||
-        data?.checkoutRequestID ||
-        data?.CheckoutRequestID ||
-        data?.externalReference ||
-        data?.error?.checkoutRequestId ||
-        data?.error?.checkoutRequestID ||
-        data?.error?.CheckoutRequestID ||
-        data?.error?.data?.checkoutRequestId ||
-        data?.error?.data?.checkoutRequestID ||
-        data?.error?.data?.CheckoutRequestID;
-
-      const isAccepted = Boolean(paymentReference) || Boolean(data?.success);
-
-      console.log('Extracted payment reference:', paymentReference);
-
-      if (isAccepted && paymentReference) {
-        clearError();
-        showStatus('STK Push sent. Please complete the payment on your phone.', 'pending');
-        startPolling(paymentReference);
-      } else if (data?.success && data?.data) {
-        console.error('No payment reference found in response');
-        showError('Payment reference not received');
-        showStatus('Payment initiation failed. Please try again.', 'error');
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
+        console.error('Failed to parse JSON:', e);
+        showError(`Server error (${response.status}). Please try again later.`);
+        setPaymentStatus('failed');
         setIsProcessing(false);
+        return;
+      }
+
+      if (!response.ok || data.status === 'error') {
+        showError(data.message || `Failed to initiate payment (${response.status})`);
+        setPaymentStatus('failed');
+        setIsProcessing(false);
+        return;
+      }
+
+      if (data.success && data.data?.checkout_id) {
+        setCheckoutRequestId(data.data.checkout_id);
+        setPaymentStatus('pending');
+        toast.success('STK Push sent! Check your phone');
+
+        pollPaymentStatus(data.data.checkout_id);
       } else {
-        showError(data?.message || 'Failed to initiate payment');
-        showStatus('Payment initiation failed. Please try again.', 'error');
+        showError('Invalid response from payment gateway');
+        setPaymentStatus('failed');
         setIsProcessing(false);
       }
     } catch (error) {
-      console.error('Payment initiation error:', error);
-      showError('Network error. Please try again later.');
-      showStatus('Connection error. Please check your internet and try again.', 'error');
+      console.error('STK Push Error:', error);
+      showError('Failed to send STK push. Please try again.');
+      setPaymentStatus('failed');
       setIsProcessing(false);
     }
   };
 
-  const startPolling = (reference: string) => {
-    if (pollInterval) {
-      clearInterval(pollInterval);
-    }
+  const pollPaymentStatus = async (checkoutId: string) => {
+    const maxAttempts = 30; // 2.5 minutes (5 seconds * 30)
+    let attempts = 0;
 
-    pollInterval = setInterval(async () => {
+    const checkStatus = async () => {
+      if (attempts >= maxAttempts) {
+        toast.error('Payment verification timed out. Please check your M-Pesa messages.');
+        setPaymentStatus('timeout');
+        setIsProcessing(false);
+        return;
+      }
+
+      attempts++;
+
       try {
-        const response = await fetch(`${API_URL}/payment-status?reference=${reference}`);
+        const response = await fetch(`${SWIFTPAY_BASE_URL}/api/mpesa-verification-proxy`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            checkoutId: checkoutId,
+          }),
+        });
+
         const data = await response.json();
+        console.log('Payment status check:', JSON.stringify(data, null, 2));
+        console.log('Payment status:', data.payment?.status);
+        console.log('Payment resultCode:', data.payment?.resultCode);
+        console.log('Payment resultDesc:', data.payment?.resultDesc);
 
-        if (data.success && data.payment) {
-          if (data.payment.status === 'success' || data.payment.status === 'SUCCESS') {
-            if (pollInterval) clearInterval(pollInterval);
-            showStatus('Congratulations! Application completed successfully!', 'success');
+        // Check if payment was successful
+        const successStatuses = ['completed', 'success', 'paid', 'succeeded'];
+        if (data.success && data.payment?.status && successStatuses.includes(data.payment.status.toLowerCase())) {
+          setPaymentStatus('success');
+          setIsProcessing(false);
+          setStep('success');
+          toast.success('Payment confirmed! Your application is complete.');
+          return;
+        }
 
-            if (data.payment.mpesaReceiptNumber) {
-              setTransactionId(data.payment.mpesaReceiptNumber);
-            } else {
-              setTransactionId(reference);
-            }
+        // If payment failed
+        const failedStatuses = ['failed', 'cancelled', 'rejected'];
+        if (data.success && data.payment?.status && failedStatuses.includes(data.payment.status.toLowerCase())) {
+          setPaymentStatus('failed');
+          setIsProcessing(false);
+          setStep('failed');
+          toast.error(data.payment.resultDesc || 'Payment failed. Please try again.');
+          return;
+        }
 
-            setTimeout(() => {
-              setStep('success');
-              setIsProcessing(false);
-            }, 1500);
-          } else if (data.payment.status === 'failed' || data.payment.status === 'FAILED') {
-            if (pollInterval) clearInterval(pollInterval);
+        // If payment is still processing, continue polling
+        const processingStatuses = ['processing', 'pending'];
+        if (data.success && data.payment?.status && processingStatuses.includes(data.payment.status.toLowerCase())) {
+          setTimeout(checkStatus, 5000);
+          return;
+        }
 
-            if (data.payment.resultDescription) {
-              setFailureReason(data.payment.resultDescription);
-            } else if (data.payment.resultDesc) {
-              setFailureReason(data.payment.resultDesc);
-            } else {
-              setFailureReason('The payment was cancelled by user.');
-            }
-
-            setTimeout(() => {
-              setStep('failed');
-              setIsProcessing(false);
-            }, 1000);
-          }
+        // Unknown status - log it and continue polling if we haven't exhausted attempts
+        console.log('Unknown payment status:', data.payment?.status);
+        console.log('Full response:', JSON.stringify(data));
+        if (attempts < maxAttempts) {
+          setTimeout(checkStatus, 5000);
+        } else {
+          setPaymentStatus('timeout');
+          setIsProcessing(false);
+          toast.error('Payment verification timed out.');
         }
       } catch (error) {
-        console.error('Error checking payment status:', error);
+        console.error('Status check error:', error);
+        // Continue polling even on error
+        setTimeout(checkStatus, 5000);
       }
-    }, 5000);
+    };
+
+    // Start polling after 5 seconds (give user time to enter PIN)
+    setTimeout(checkStatus, 5000);
   };
 
   const clearError = () => {
